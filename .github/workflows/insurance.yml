@@ -2,7 +2,8 @@ name: B2C Insurance Search AutoTest
 
 on:
   schedule:
-    # Каждый час — как и помечено в сообщении бота (Hourly Monitoring).
+    # Раз в 5 часов. В шапке уведомления при этом стоит "Hourly Monitoring" —
+    # так же, как в остальных модулях мониторинга.
     # GitHub запускает расписание с задержкой в несколько минут, это нормально.
     - cron: '0 */5 * * *'
   workflow_dispatch:

@@ -242,6 +242,22 @@ describe('Insurance Search Flow', () => {
     // а нам нужен один. Значение подхватывается из поля само.
     cy.fillInput('.ages-popover__input', AGE, { timeout: T.UI });
 
+    // Попап закрываем сами, Escape'ом. Перед вводом Cypress подкручивает поле к
+    // верху экрана (scrollBehavior: 'top'), и форма уезжает вверх за пределы
+    // вьюпорта: следующий шаг ("Цель поездки") падал на проверке видимости.
+    // Вернуть форму скроллом, пока попап открыт, нельзя — PrimeVue закрывает
+    // оверлеи на скролле, и возраст остался бы невведённым.
+    cy.get('.ages-popover__input', { timeout: T.UI }).type('{esc}');
+    cy.get('.ages-popover', { timeout: T.UI }).should('not.exist');
+
+    // Возраст встал в поле — проверяем до поиска, иначе он уйдёт без
+    // застрахованного (в поле-триггере значение появляется только после
+    // закрытия попапа).
+    cy.get('.insurance-search .ages-trigger__input', { timeout: T.UI })
+      .should('have.value', AGE);
+
+    backToForm();
+
     // 15. ЦЕЛЬ ПОЕЗДКИ — первый пункт списка
     cy.clickUntilVisible('.insurance-search .p-select', '.p-select-overlay', {
       timeout: T.UI,
@@ -255,11 +271,6 @@ describe('Insurance Search Flow', () => {
       .click({ timeout: T.UI });
 
     cy.get('.p-select-overlay', { timeout: T.UI }).should('not.exist');
-
-    // Возраст в поле появляется после закрытия попапа — проверяем здесь, чтобы
-    // поиск не ушёл без застрахованного.
-    cy.get('.insurance-search .ages-trigger__input', { timeout: T.UI })
-      .should('have.value', AGE);
 
     backToForm();
 
