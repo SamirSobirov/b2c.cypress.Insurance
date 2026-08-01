@@ -4,7 +4,7 @@ on:
   schedule:
     # Каждый час — как и помечено в сообщении бота (Hourly Monitoring).
     # GitHub запускает расписание с задержкой в несколько минут, это нормально.
-    - cron: '0 * * * *'
+    - cron: '0 */5 * * *'
   workflow_dispatch:
     inputs:
       user_chat_id:
